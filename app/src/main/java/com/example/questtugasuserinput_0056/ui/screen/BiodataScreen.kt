@@ -28,6 +28,7 @@ import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.questtugasuserinput_0056.R
@@ -38,6 +39,7 @@ import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 fun BiodataScreen(modifier: Modifier = Modifier) {
     val namaDepan = rememberSaveable { mutableStateOf(String()) }
     val namaBelakang = rememberSaveable { mutableStateOf(String()) }
+    val email = rememberSaveable { mutableStateOf(String()) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.transparan),
@@ -105,6 +107,13 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                         modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
                     )
                 }
+                FieldTeks(
+                    nilai = email.value,
+                    onNilaiBerubah = { email.value = it },
+                    label = R.string.label_email,
+                    modifier = Modifier.fillMaxWidth(),
+                    tipeKeyboard = KeyboardType.Email,
+                )
             }
         }
     }

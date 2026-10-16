@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -220,5 +223,29 @@ fun BarisSkill(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun TombolProses(
+    aktif: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Button(
+        onClick = onClick,
+        enabled = aktif,
+        shape = CircleShape,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = colorResource(R.color.ungu_tombol),
+            contentColor = colorResource(R.color.putih_kartu),
+            disabledContainerColor = colorResource(R.color.abu_tombol_nonaktif),
+            disabledContentColor = colorResource(R.color.putih_teks_nonaktif),
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(dimensionResource(R.dimen.tinggi_tombol)),
+    ) {
+        Text(stringResource(R.string.tombol_proceed))
     }
 }

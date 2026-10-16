@@ -38,6 +38,7 @@ import com.example.questtugasuserinput_0056.ui.component.FieldTanggal
 import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
 import com.example.questtugasuserinput_0056.ui.component.BarisSkill
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
+import com.example.questtugasuserinput_0056.ui.component.TombolProses
 
 @Composable
 fun BiodataScreen(modifier: Modifier = Modifier) {
@@ -156,6 +157,7 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                         }
                     },
                 )
+                TombolProses(aktif = false, onClick = {})
             }
         }
     }

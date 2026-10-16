@@ -32,7 +32,7 @@ fun QuestTugasUserInput_0056Theme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = typographyFromResources(),
         content = content
     )
 }

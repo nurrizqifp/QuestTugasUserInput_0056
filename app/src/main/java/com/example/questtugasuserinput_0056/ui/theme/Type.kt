@@ -1,34 +1,21 @@
 package com.example.questtugasuserinput_0056.ui.theme
 
+import androidx.compose.runtime.Composable
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.sp
+import com.example.questtugasuserinput_0056.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
+@Composable
+fun typographyFromResources(): Typography {
+    val bodySize = dimensionResource(R.dimen.ukuran_teks_isi).value.sp
+    return Typography(
+        bodyLarge = TextStyle(
+            fontWeight = FontWeight.Normal,
+            fontSize = bodySize,
+            lineHeight = bodySize,
+        ),
     )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
-)
+}

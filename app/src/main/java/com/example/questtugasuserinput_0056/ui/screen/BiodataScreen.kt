@@ -39,6 +39,7 @@ import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
 import com.example.questtugasuserinput_0056.ui.component.BarisSkill
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 import com.example.questtugasuserinput_0056.ui.component.TombolProses
+import com.example.questtugasuserinput_0056.ui.state.BiodataState
 
 @Composable
 fun BiodataScreen(modifier: Modifier = Modifier) {
@@ -48,6 +49,14 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
     val tglLahir = rememberSaveable { mutableStateOf(String()) }
     val indeksExperience = rememberSaveable { mutableStateOf<Int?>(null) }
     val skillTerpilih = rememberSaveable { mutableStateOf(emptySet<Int>()) }
+    val formValid = BiodataState(
+        namaDepan = namaDepan.value,
+        namaBelakang = namaBelakang.value,
+        email = email.value,
+        tglLahir = tglLahir.value,
+        indeksExperience = indeksExperience.value,
+        skillTerpilih = skillTerpilih.value,
+    ).formValid()
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.transparan),
@@ -157,7 +166,7 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                         }
                     },
                 )
-                TombolProses(aktif = false, onClick = {})
+                TombolProses(aktif = formValid, onClick = {})
             }
         }
     }

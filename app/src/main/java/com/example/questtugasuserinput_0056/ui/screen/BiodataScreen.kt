@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,16 +24,20 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.questtugasuserinput_0056.R
+import com.example.questtugasuserinput_0056.ui.component.FieldTeks
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 
 @Composable
 fun BiodataScreen(modifier: Modifier = Modifier) {
+    val namaDepan = rememberSaveable { mutableStateOf(String()) }
+    val namaBelakang = rememberSaveable { mutableStateOf(String()) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.transparan),
@@ -81,6 +88,23 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                 )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_8)),
+                ) {
+                    FieldTeks(
+                        nilai = namaDepan.value,
+                        onNilaiBerubah = { namaDepan.value = it },
+                        label = R.string.label_nama_depan,
+                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+                    )
+                    FieldTeks(
+                        nilai = namaBelakang.value,
+                        onNilaiBerubah = { namaBelakang.value = it },
+                        label = R.string.label_nama_belakang,
+                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+                    )
+                }
             }
         }
     }

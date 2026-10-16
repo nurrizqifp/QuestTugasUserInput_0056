@@ -23,4 +23,5 @@
     <string name="cd_gambar_latar">Bunga bernuansa neon</string>
     <string name="cd_ikon_kalender">Pilih tanggal lahir</string>
     <string name="cd_ikon_panah_bawah">Buka pilihan experience</string>
+    <string name="pemisah_skill">, </string>
 </resources>

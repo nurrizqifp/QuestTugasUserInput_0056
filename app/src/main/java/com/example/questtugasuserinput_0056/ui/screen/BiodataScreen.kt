@@ -39,6 +39,7 @@ import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
 import com.example.questtugasuserinput_0056.ui.component.BarisSkill
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 import com.example.questtugasuserinput_0056.ui.component.TombolProses
+import com.example.questtugasuserinput_0056.ui.component.DialogRingkasan
 import com.example.questtugasuserinput_0056.ui.state.BiodataState
 
 @Composable
@@ -49,6 +50,7 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
     val tglLahir = rememberSaveable { mutableStateOf(String()) }
     val indeksExperience = rememberSaveable { mutableStateOf<Int?>(null) }
     val skillTerpilih = rememberSaveable { mutableStateOf(emptySet<Int>()) }
+    val tampilkanRingkasan = rememberSaveable { mutableStateOf(false) }
     val formValid = BiodataState(
         namaDepan = namaDepan.value,
         namaBelakang = namaBelakang.value,
@@ -166,7 +168,30 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                         }
                     },
                 )
-                TombolProses(aktif = formValid, onClick = {})
+                TombolProses(
+                    aktif = formValid,
+                    onClick = { tampilkanRingkasan.value = true },
+                )
+            }
+            if (tampilkanRingkasan.value) {
+                val pilihanExperience = stringArrayResource(R.array.daftar_experience).toList()
+                val pilihanSkill = stringArrayResource(R.array.daftar_skill).toList()
+                val daftarSkill = skillTerpilih.value
+                    .sorted()
+                    .mapNotNull(pilihanSkill::getOrNull)
+                    .joinToString(separator = stringResource(R.string.pemisah_skill))
+                DialogRingkasan(
+                    ringkasan = stringResource(
+                        R.string.format_ringkasan,
+                        namaDepan.value,
+                        namaBelakang.value,
+                        email.value,
+                        tglLahir.value,
+                        indeksExperience.value?.let(pilihanExperience::getOrNull) ?: String(),
+                        daftarSkill,
+                    ),
+                    onTutup = { tampilkanRingkasan.value = false },
+                )
             }
         }
     }

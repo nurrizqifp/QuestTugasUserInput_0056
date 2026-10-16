@@ -1,5 +1,6 @@
 package com.example.questtugasuserinput_0056.ui.component
 
+import android.app.DatePickerDialog
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,17 +10,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.example.questtugasuserinput_0056.R
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import java.util.TimeZone
 
 @Composable
 fun IndikatorHalaman(modifier: Modifier = Modifier) {
@@ -61,6 +70,58 @@ fun FieldTeks(
         maxLines = integerResource(R.integer.maks_baris),
         shape = RoundedCornerShape(dimensionResource(R.dimen.radius_field)),
         keyboardOptions = KeyboardOptions(keyboardType = tipeKeyboard),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = colorResource(R.color.ungu_tombol),
+            unfocusedBorderColor = colorResource(R.color.abu_garis_field),
+        ),
+        modifier = modifier,
+    )
+}
+
+@Composable
+fun FieldTanggal(
+    nilai: String,
+    onTanggalBerubah: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val zonaWaktu = stringResource(R.string.zona_waktu)
+    val kalender = Calendar.getInstance(TimeZone.getTimeZone(zonaWaktu), Locale.getDefault())
+    val pemilihTanggal = {
+        DatePickerDialog(
+            context,
+            { _, tahun, bulan, hari ->
+                kalender.set(tahun, bulan, hari)
+                val formatter = SimpleDateFormat(
+                    context.getString(R.string.format_tanggal),
+                    Locale.getDefault(),
+                ).apply {
+                    timeZone = TimeZone.getTimeZone(zonaWaktu)
+                }
+                onTanggalBerubah(formatter.format(kalender.time))
+            },
+            kalender.get(Calendar.YEAR),
+            kalender.get(Calendar.MONTH),
+            kalender.get(Calendar.DAY_OF_MONTH),
+        ).show()
+    }
+
+    OutlinedTextField(
+        value = nilai,
+        onValueChange = {},
+        readOnly = true,
+        singleLine = true,
+        maxLines = integerResource(R.integer.maks_baris),
+        label = { Text(stringResource(R.string.label_tanggal_lahir)) },
+        trailingIcon = {
+            IconButton(onClick = pemilihTanggal) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_kalender),
+                    contentDescription = stringResource(R.string.cd_ikon_kalender),
+                )
+            }
+        },
+        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_field)),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = colorResource(R.color.ungu_tombol),
             unfocusedBorderColor = colorResource(R.color.abu_garis_field),

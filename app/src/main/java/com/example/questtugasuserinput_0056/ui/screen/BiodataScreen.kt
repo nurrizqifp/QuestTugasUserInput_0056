@@ -14,9 +14,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,13 +40,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.questtugasuserinput_0056.R
 import com.example.questtugasuserinput_0056.ui.component.BarisSkill
-import com.example.questtugasuserinput_0056.ui.component.DialogRingkasan
 import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
 import com.example.questtugasuserinput_0056.ui.component.FieldTanggal
 import com.example.questtugasuserinput_0056.ui.component.FieldTeks
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 import com.example.questtugasuserinput_0056.ui.component.TombolProses
 import com.example.questtugasuserinput_0056.ui.state.BiodataState
+import kotlinx.coroutines.launch
 
 @Composable
 fun BiodataScreen(modifier: Modifier = Modifier) {
@@ -51,9 +56,23 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
     val tglLahir = rememberSaveable { mutableStateOf(String()) }
     val indeksExperience = rememberSaveable { mutableStateOf<Int?>(null) }
     val skillTerpilih = rememberSaveable { mutableStateOf(emptySet<Int>()) }
-    val tampilkanRingkasan = rememberSaveable { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val pengalaman = stringArrayResource(R.array.daftar_experience).toList()
     val skill = stringArrayResource(R.array.daftar_skill).toList()
+    val daftarSkill = skillTerpilih.value
+        .sorted()
+        .mapNotNull(skill::getOrNull)
+        .joinToString(separator = stringResource(R.string.pemisah_skill))
+    val pesanSnackbar = stringResource(
+        R.string.format_snackbar_biodata,
+        namaDepan.value,
+        namaBelakang.value,
+        email.value,
+        tglLahir.value,
+        indeksExperience.value?.let(pengalaman::getOrNull) ?: String(),
+        daftarSkill,
+    )
     val biodata = BiodataState(
         namaDepan = namaDepan.value,
         namaBelakang = namaBelakang.value,
@@ -68,7 +87,7 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
         biodata = biodata,
         pengalaman = pengalaman,
         skill = skill,
-        tampilkanRingkasan = tampilkanRingkasan.value,
+        snackbarHostState = snackbarHostState,
         onNamaDepanBerubah = { namaDepan.value = it },
         onNamaBelakangBerubah = { namaBelakang.value = it },
         onEmailBerubah = { email.value = it },
@@ -81,8 +100,11 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                 skillTerpilih.value + indeks
             }
         },
-        onProceed = { tampilkanRingkasan.value = true },
-        onDialogTutup = { tampilkanRingkasan.value = false },
+        onProceed = {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(pesanSnackbar)
+            }
+        },
     )
 }
 
@@ -92,7 +114,7 @@ private fun PanggungBiodata(
     biodata: BiodataState,
     pengalaman: List<String>,
     skill: List<String>,
-    tampilkanRingkasan: Boolean,
+    snackbarHostState: SnackbarHostState,
     onNamaDepanBerubah: (String) -> Unit,
     onNamaBelakangBerubah: (String) -> Unit,
     onEmailBerubah: (String) -> Unit,
@@ -100,11 +122,20 @@ private fun PanggungBiodata(
     onExperienceBerubah: (Int) -> Unit,
     onSkillBerubah: (Int) -> Unit,
     onProceed: () -> Unit,
-    onDialogTutup: () -> Unit,
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.transparan),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState,
+                snackbar = { data ->
+                    Snackbar {
+                        Text(data.visuals.message)
+                    }
+                },
+            )
+        },
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -131,14 +162,6 @@ private fun PanggungBiodata(
                 onSkillBerubah = onSkillBerubah,
                 onProceed = onProceed,
             )
-            if (tampilkanRingkasan) {
-                DialogBiodata(
-                    biodata = biodata,
-                    pengalaman = pengalaman,
-                    skill = skill,
-                    onTutup = onDialogTutup,
-                )
-            }
         }
     }
 }
@@ -295,30 +318,5 @@ private fun PilihanSkill(
         pilihan = skill,
         terpilih = terpilih,
         onSkillBerubah = onSkillBerubah,
-    )
-}
-
-@Composable
-private fun DialogBiodata(
-    biodata: BiodataState,
-    pengalaman: List<String>,
-    skill: List<String>,
-    onTutup: () -> Unit,
-) {
-    val daftarSkill = biodata.skillTerpilih
-        .sorted()
-        .mapNotNull(skill::getOrNull)
-        .joinToString(separator = stringResource(R.string.pemisah_skill))
-    DialogRingkasan(
-        ringkasan = stringResource(
-            R.string.format_ringkasan,
-            biodata.namaDepan,
-            biodata.namaBelakang,
-            biodata.email,
-            biodata.tglLahir,
-            biodata.indeksExperience?.let(pengalaman::getOrNull) ?: String(),
-            daftarSkill,
-        ),
-        onTutup = onTutup,
     )
 }

@@ -9,15 +9,7 @@
     <string name="label_experience">Experience</string>
     <string name="label_pilih_skill">Pilih Skill Anda :</string>
     <string name="tombol_proceed">Proceed</string>
-    <string name="pesan_nama_depan_wajib">Nama depan wajib diisi.</string>
-    <string name="pesan_nama_belakang_wajib">Nama belakang wajib diisi.</string>
-    <string name="pesan_email_tidak_valid">Masukkan alamat email yang valid.</string>
-    <string name="pesan_tanggal_lahir_wajib">Tanggal lahir wajib dipilih.</string>
-    <string name="pesan_experience_wajib">Pilih pengalaman Anda.</string>
-    <string name="pesan_skill_wajib">Pilih minimal satu skill.</string>
-    <string name="judul_dialog_ringkasan">Ringkasan Biodata</string>
-    <string name="tombol_dialog_tutup">Tutup</string>
-    <string name="format_ringkasan">Nama: %1$s %2$s\nEmail: %3$s\nTanggal lahir: %4$s\nExperience: %5$s\nSkill: %6$s</string>
+    <string name="format_snackbar_biodata">%1$s %2$s\n%3$s\n%4$s\n%5$s\n%6$s</string>
     <string name="format_tanggal" translatable="false" formatted="false">dd/MM/yyyy</string>
     <string name="zona_waktu" translatable="false">UTC</string>
     <string name="cd_gambar_latar">Bunga bernuansa neon</string>

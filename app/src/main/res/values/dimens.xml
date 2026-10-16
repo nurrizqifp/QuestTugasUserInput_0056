@@ -12,4 +12,9 @@
     <dimen name="jarak_kartu_ke_tepi">12dp</dimen>
     <dimen name="ukuran_titik">6dp</dimen>
     <dimen name="ukuran_titik_aktif">8dp</dimen>
+    <dimen name="ukuran_teks_judul">28sp</dimen>
+    <dimen name="ukuran_teks_subjudul">12sp</dimen>
+    <dimen name="ukuran_teks_label">16sp</dimen>
+    <dimen name="ukuran_teks_isi">14sp</dimen>
+    <dimen name="ukuran_teks_skill">12sp</dimen>
 </resources>

@@ -36,6 +36,7 @@ import com.example.questtugasuserinput_0056.R
 import com.example.questtugasuserinput_0056.ui.component.FieldTeks
 import com.example.questtugasuserinput_0056.ui.component.FieldTanggal
 import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
+import com.example.questtugasuserinput_0056.ui.component.BarisSkill
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 
 @Composable
@@ -45,6 +46,7 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
     val email = rememberSaveable { mutableStateOf(String()) }
     val tglLahir = rememberSaveable { mutableStateOf(String()) }
     val indeksExperience = rememberSaveable { mutableStateOf<Int?>(null) }
+    val skillTerpilih = rememberSaveable { mutableStateOf(emptySet<Int>()) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.transparan),
@@ -137,6 +139,23 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                         modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
                     )
                 }
+                Text(
+                    text = stringResource(R.string.label_pilih_skill),
+                    color = colorResource(R.color.hitam_teks),
+                    fontSize = dimensionResource(R.dimen.ukuran_teks_label).value.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+                BarisSkill(
+                    pilihan = stringArrayResource(R.array.daftar_skill).toList(),
+                    terpilih = skillTerpilih.value,
+                    onSkillBerubah = { indeks ->
+                        skillTerpilih.value = if (indeks in skillTerpilih.value) {
+                            skillTerpilih.value - indeks
+                        } else {
+                            skillTerpilih.value + indeks
+                        }
+                    },
+                )
             }
         }
     }

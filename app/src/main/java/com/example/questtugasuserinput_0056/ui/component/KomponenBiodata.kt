@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -31,6 +33,7 @@ import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
 import com.example.questtugasuserinput_0056.R
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -186,6 +189,34 @@ fun FieldDropdown(
                         onPilihanBerubah(indeks)
                         terbuka.value = false
                     },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BarisSkill(
+    pilihan: List<String>,
+    terpilih: Set<Int>,
+    onSkillBerubah: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        pilihan.forEachIndexed { indeks, namaSkill ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Checkbox(
+                    checked = indeks in terpilih,
+                    onCheckedChange = { onSkillBerubah(indeks) },
+                )
+                Text(
+                    text = namaSkill,
+                    color = colorResource(R.color.hitam_teks),
+                    fontSize = dimensionResource(R.dimen.ukuran_teks_skill).value.sp,
                 )
             }
         }

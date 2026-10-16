@@ -1,0 +1,6 @@
+<resources>
+    <integer name="berat_sama">1</integer>
+    <integer name="jumlah_indikator">4</integer>
+    <integer name="indikator_aktif">0</integer>
+    <integer name="maks_baris">1</integer>
+</resources>

@@ -1,0 +1,15 @@
+<resources>
+    <dimen name="spasi_4">4dp</dimen>
+    <dimen name="spasi_8">8dp</dimen>
+    <dimen name="spasi_12">12dp</dimen>
+    <dimen name="spasi_16">16dp</dimen>
+    <dimen name="spasi_24">24dp</dimen>
+    <dimen name="radius_field">24dp</dimen>
+    <dimen name="radius_kartu">28dp</dimen>
+    <dimen name="tinggi_field">56dp</dimen>
+    <dimen name="tinggi_tombol">56dp</dimen>
+    <dimen name="elevasi_kartu">12dp</dimen>
+    <dimen name="jarak_kartu_ke_tepi">12dp</dimen>
+    <dimen name="ukuran_titik">6dp</dimen>
+    <dimen name="ukuran_titik_aktif">8dp</dimen>
+</resources>

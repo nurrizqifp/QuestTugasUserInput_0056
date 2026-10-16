@@ -19,3 +19,15 @@ disediakan pemilik.
 - Tombol Proceed aktif setelah semua isian wajib valid dan menampilkan ringkasan
   biodata.
 - Perubahan disusun dalam commit kecil dengan pesan berbahasa Indonesia.
+
+## Menjalankan proyek
+
+Buka proyek di Android Studio dan tunggu Gradle selesai melakukan sinkronisasi.
+Untuk memeriksa build debug dari terminal:
+
+```powershell
+.\gradlew.bat assembleDebug
+```
+
+Setelah build berhasil, jalankan aplikasi melalui emulator atau perangkat
+Android dari Android Studio.

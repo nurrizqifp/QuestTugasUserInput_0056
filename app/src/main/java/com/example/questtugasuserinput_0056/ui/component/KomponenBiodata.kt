@@ -1,16 +1,24 @@
 package com.example.questtugasuserinput_0056.ui.component
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import com.example.questtugasuserinput_0056.R
 
 @Composable
@@ -35,4 +43,28 @@ fun IndikatorHalaman(modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+@Composable
+fun FieldTeks(
+    nilai: String,
+    onNilaiBerubah: (String) -> Unit,
+    @StringRes label: Int,
+    modifier: Modifier = Modifier,
+    tipeKeyboard: KeyboardType = KeyboardType.Text,
+) {
+    OutlinedTextField(
+        value = nilai,
+        onValueChange = onNilaiBerubah,
+        label = { Text(stringResource(label)) },
+        singleLine = true,
+        maxLines = integerResource(R.integer.maks_baris),
+        shape = RoundedCornerShape(dimensionResource(R.dimen.radius_field)),
+        keyboardOptions = KeyboardOptions(keyboardType = tipeKeyboard),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = colorResource(R.color.ungu_tombol),
+            unfocusedBorderColor = colorResource(R.color.abu_garis_field),
+        ),
+        modifier = modifier,
+    )
 }

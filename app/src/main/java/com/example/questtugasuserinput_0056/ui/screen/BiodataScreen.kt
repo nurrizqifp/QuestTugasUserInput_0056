@@ -33,13 +33,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.example.questtugasuserinput_0056.R
-import com.example.questtugasuserinput_0056.ui.component.FieldTeks
-import com.example.questtugasuserinput_0056.ui.component.FieldTanggal
-import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
 import com.example.questtugasuserinput_0056.ui.component.BarisSkill
+import com.example.questtugasuserinput_0056.ui.component.DialogRingkasan
+import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
+import com.example.questtugasuserinput_0056.ui.component.FieldTanggal
+import com.example.questtugasuserinput_0056.ui.component.FieldTeks
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 import com.example.questtugasuserinput_0056.ui.component.TombolProses
-import com.example.questtugasuserinput_0056.ui.component.DialogRingkasan
 import com.example.questtugasuserinput_0056.ui.state.BiodataState
 
 @Composable
@@ -51,14 +51,56 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
     val indeksExperience = rememberSaveable { mutableStateOf<Int?>(null) }
     val skillTerpilih = rememberSaveable { mutableStateOf(emptySet<Int>()) }
     val tampilkanRingkasan = rememberSaveable { mutableStateOf(false) }
-    val formValid = BiodataState(
+    val pengalaman = stringArrayResource(R.array.daftar_experience).toList()
+    val skill = stringArrayResource(R.array.daftar_skill).toList()
+    val biodata = BiodataState(
         namaDepan = namaDepan.value,
         namaBelakang = namaBelakang.value,
         email = email.value,
         tglLahir = tglLahir.value,
         indeksExperience = indeksExperience.value,
         skillTerpilih = skillTerpilih.value,
-    ).formValid()
+    )
+
+    PanggungBiodata(
+        modifier = modifier,
+        biodata = biodata,
+        pengalaman = pengalaman,
+        skill = skill,
+        tampilkanRingkasan = tampilkanRingkasan.value,
+        onNamaDepanBerubah = { namaDepan.value = it },
+        onNamaBelakangBerubah = { namaBelakang.value = it },
+        onEmailBerubah = { email.value = it },
+        onTanggalBerubah = { tglLahir.value = it },
+        onExperienceBerubah = { indeksExperience.value = it },
+        onSkillBerubah = { indeks ->
+            skillTerpilih.value = if (indeks in skillTerpilih.value) {
+                skillTerpilih.value - indeks
+            } else {
+                skillTerpilih.value + indeks
+            }
+        },
+        onProceed = { tampilkanRingkasan.value = true },
+        onDialogTutup = { tampilkanRingkasan.value = false },
+    )
+}
+
+@Composable
+private fun PanggungBiodata(
+    modifier: Modifier = Modifier,
+    biodata: BiodataState,
+    pengalaman: List<String>,
+    skill: List<String>,
+    tampilkanRingkasan: Boolean,
+    onNamaDepanBerubah: (String) -> Unit,
+    onNamaBelakangBerubah: (String) -> Unit,
+    onEmailBerubah: (String) -> Unit,
+    onTanggalBerubah: (String) -> Unit,
+    onExperienceBerubah: (Int) -> Unit,
+    onSkillBerubah: (Int) -> Unit,
+    onProceed: () -> Unit,
+    onDialogTutup: () -> Unit,
+) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.transparan),
@@ -68,131 +110,213 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            Image(
-                painter = painterResource(R.drawable.bg_neon),
-                contentDescription = stringResource(R.string.cd_gambar_latar),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize(),
-            )
+            GambarLatar()
             IndikatorHalaman(
                 modifier = Modifier
                     .align(Alignment.TopStart)
                     .padding(dimensionResource(R.dimen.spasi_16)),
             )
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(dimensionResource(R.dimen.jarak_kartu_ke_tepi))
-                    .fillMaxWidth()
-                    .shadow(
-                        dimensionResource(R.dimen.elevasi_kartu),
-                        RoundedCornerShape(dimensionResource(R.dimen.radius_kartu)),
-                    )
-                    .clip(RoundedCornerShape(dimensionResource(R.dimen.radius_kartu)))
-                    .background(colorResource(R.color.putih_kartu))
-                    .verticalScroll(rememberScrollState())
-                    .padding(dimensionResource(R.dimen.spasi_16)),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_12)),
-            ) {
-                Text(
-                    text = stringResource(R.string.judul_form),
-                    color = colorResource(R.color.ungu_judul),
-                    fontSize = dimensionResource(R.dimen.ukuran_teks_judul).value.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Text(
-                    text = stringResource(R.string.subjudul_form),
-                    color = colorResource(R.color.abu_subjudul),
-                    fontSize = dimensionResource(R.dimen.ukuran_teks_subjudul).value.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_8)),
-                ) {
-                    FieldTeks(
-                        nilai = namaDepan.value,
-                        onNilaiBerubah = { namaDepan.value = it },
-                        label = R.string.label_nama_depan,
-                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
-                    )
-                    FieldTeks(
-                        nilai = namaBelakang.value,
-                        onNilaiBerubah = { namaBelakang.value = it },
-                        label = R.string.label_nama_belakang,
-                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
-                    )
-                }
-                FieldTeks(
-                    nilai = email.value,
-                    onNilaiBerubah = { email.value = it },
-                    label = R.string.label_email,
-                    modifier = Modifier.fillMaxWidth(),
-                    tipeKeyboard = KeyboardType.Email,
-                )
-                val pilihanExperience = stringArrayResource(R.array.daftar_experience).toList()
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_8)),
-                ) {
-                    FieldTanggal(
-                        nilai = tglLahir.value,
-                        onTanggalBerubah = { tglLahir.value = it },
-                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
-                    )
-                    FieldDropdown(
-                        nilai = indeksExperience.value?.let(pilihanExperience::getOrNull) ?: String(),
-                        pilihan = pilihanExperience,
-                        onPilihanBerubah = { indeksExperience.value = it },
-                        label = R.string.label_experience,
-                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
-                    )
-                }
-                Text(
-                    text = stringResource(R.string.label_pilih_skill),
-                    color = colorResource(R.color.hitam_teks),
-                    fontSize = dimensionResource(R.dimen.ukuran_teks_label).value.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-                BarisSkill(
-                    pilihan = stringArrayResource(R.array.daftar_skill).toList(),
-                    terpilih = skillTerpilih.value,
-                    onSkillBerubah = { indeks ->
-                        skillTerpilih.value = if (indeks in skillTerpilih.value) {
-                            skillTerpilih.value - indeks
-                        } else {
-                            skillTerpilih.value + indeks
-                        }
-                    },
-                )
-                TombolProses(
-                    aktif = formValid,
-                    onClick = { tampilkanRingkasan.value = true },
-                )
-            }
-            if (tampilkanRingkasan.value) {
-                val pilihanExperience = stringArrayResource(R.array.daftar_experience).toList()
-                val pilihanSkill = stringArrayResource(R.array.daftar_skill).toList()
-                val daftarSkill = skillTerpilih.value
-                    .sorted()
-                    .mapNotNull(pilihanSkill::getOrNull)
-                    .joinToString(separator = stringResource(R.string.pemisah_skill))
-                DialogRingkasan(
-                    ringkasan = stringResource(
-                        R.string.format_ringkasan,
-                        namaDepan.value,
-                        namaBelakang.value,
-                        email.value,
-                        tglLahir.value,
-                        indeksExperience.value?.let(pilihanExperience::getOrNull) ?: String(),
-                        daftarSkill,
-                    ),
-                    onTutup = { tampilkanRingkasan.value = false },
+            KartuBiodata(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                biodata = biodata,
+                pengalaman = pengalaman,
+                skill = skill,
+                onNamaDepanBerubah = onNamaDepanBerubah,
+                onNamaBelakangBerubah = onNamaBelakangBerubah,
+                onEmailBerubah = onEmailBerubah,
+                onTanggalBerubah = onTanggalBerubah,
+                onExperienceBerubah = onExperienceBerubah,
+                onSkillBerubah = onSkillBerubah,
+                onProceed = onProceed,
+            )
+            if (tampilkanRingkasan) {
+                DialogBiodata(
+                    biodata = biodata,
+                    pengalaman = pengalaman,
+                    skill = skill,
+                    onTutup = onDialogTutup,
                 )
             }
         }
     }
+}
+
+@Composable
+private fun GambarLatar() {
+    Image(
+        painter = painterResource(R.drawable.bg_neon),
+        contentDescription = stringResource(R.string.cd_gambar_latar),
+        contentScale = ContentScale.Crop,
+        modifier = Modifier.fillMaxSize(),
+    )
+}
+
+@Composable
+private fun KartuBiodata(
+    modifier: Modifier = Modifier,
+    biodata: BiodataState,
+    pengalaman: List<String>,
+    skill: List<String>,
+    onNamaDepanBerubah: (String) -> Unit,
+    onNamaBelakangBerubah: (String) -> Unit,
+    onEmailBerubah: (String) -> Unit,
+    onTanggalBerubah: (String) -> Unit,
+    onExperienceBerubah: (Int) -> Unit,
+    onSkillBerubah: (Int) -> Unit,
+    onProceed: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.jarak_kartu_ke_tepi))
+            .fillMaxWidth()
+            .shadow(
+                dimensionResource(R.dimen.elevasi_kartu),
+                RoundedCornerShape(dimensionResource(R.dimen.radius_kartu)),
+            )
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.radius_kartu)))
+            .background(colorResource(R.color.putih_kartu))
+            .verticalScroll(rememberScrollState())
+            .padding(dimensionResource(R.dimen.spasi_16)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_12)),
+    ) {
+        JudulForm()
+        BarisNama(
+            biodata = biodata,
+            onNamaDepanBerubah = onNamaDepanBerubah,
+            onNamaBelakangBerubah = onNamaBelakangBerubah,
+        )
+        FieldTeks(
+            nilai = biodata.email,
+            onNilaiBerubah = onEmailBerubah,
+            label = R.string.label_email,
+            modifier = Modifier.fillMaxWidth(),
+            tipeKeyboard = KeyboardType.Email,
+        )
+        BarisTanggalExperience(
+            biodata = biodata,
+            pengalaman = pengalaman,
+            onTanggalBerubah = onTanggalBerubah,
+            onExperienceBerubah = onExperienceBerubah,
+        )
+        PilihanSkill(
+            skill = skill,
+            terpilih = biodata.skillTerpilih,
+            onSkillBerubah = onSkillBerubah,
+        )
+        TombolProses(aktif = biodata.formValid(), onClick = onProceed)
+    }
+}
+
+@Composable
+private fun JudulForm() {
+    Text(
+        text = stringResource(R.string.judul_form),
+        color = colorResource(R.color.ungu_judul),
+        fontSize = dimensionResource(R.dimen.ukuran_teks_judul).value.sp,
+        fontWeight = FontWeight.Bold,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth(),
+    )
+    Text(
+        text = stringResource(R.string.subjudul_form),
+        color = colorResource(R.color.abu_subjudul),
+        fontSize = dimensionResource(R.dimen.ukuran_teks_subjudul).value.sp,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+@Composable
+private fun BarisNama(
+    biodata: BiodataState,
+    onNamaDepanBerubah: (String) -> Unit,
+    onNamaBelakangBerubah: (String) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_8)),
+    ) {
+        FieldTeks(
+            nilai = biodata.namaDepan,
+            onNilaiBerubah = onNamaDepanBerubah,
+            label = R.string.label_nama_depan,
+            modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+        )
+        FieldTeks(
+            nilai = biodata.namaBelakang,
+            onNilaiBerubah = onNamaBelakangBerubah,
+            label = R.string.label_nama_belakang,
+            modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+        )
+    }
+}
+
+@Composable
+private fun BarisTanggalExperience(
+    biodata: BiodataState,
+    pengalaman: List<String>,
+    onTanggalBerubah: (String) -> Unit,
+    onExperienceBerubah: (Int) -> Unit,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_8)),
+    ) {
+        FieldTanggal(
+            nilai = biodata.tglLahir,
+            onTanggalBerubah = onTanggalBerubah,
+            modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+        )
+        FieldDropdown(
+            nilai = biodata.indeksExperience?.let(pengalaman::getOrNull) ?: String(),
+            pilihan = pengalaman,
+            onPilihanBerubah = onExperienceBerubah,
+            label = R.string.label_experience,
+            modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+        )
+    }
+}
+
+@Composable
+private fun PilihanSkill(
+    skill: List<String>,
+    terpilih: Set<Int>,
+    onSkillBerubah: (Int) -> Unit,
+) {
+    Text(
+        text = stringResource(R.string.label_pilih_skill),
+        color = colorResource(R.color.hitam_teks),
+        fontSize = dimensionResource(R.dimen.ukuran_teks_label).value.sp,
+        fontWeight = FontWeight.Bold,
+    )
+    BarisSkill(
+        pilihan = skill,
+        terpilih = terpilih,
+        onSkillBerubah = onSkillBerubah,
+    )
+}
+
+@Composable
+private fun DialogBiodata(
+    biodata: BiodataState,
+    pengalaman: List<String>,
+    skill: List<String>,
+    onTutup: () -> Unit,
+) {
+    val daftarSkill = biodata.skillTerpilih
+        .sorted()
+        .mapNotNull(skill::getOrNull)
+        .joinToString(separator = stringResource(R.string.pemisah_skill))
+    DialogRingkasan(
+        ringkasan = stringResource(
+            R.string.format_ringkasan,
+            biodata.namaDepan,
+            biodata.namaBelakang,
+            biodata.email,
+            biodata.tglLahir,
+            biodata.indeksExperience?.let(pengalaman::getOrNull) ?: String(),
+            daftarSkill,
+        ),
+        onTutup = onTutup,
+    )
 }

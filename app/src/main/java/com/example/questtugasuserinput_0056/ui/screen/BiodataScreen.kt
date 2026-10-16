@@ -26,6 +26,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.integerResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import com.example.questtugasuserinput_0056.R
 import com.example.questtugasuserinput_0056.ui.component.FieldTeks
 import com.example.questtugasuserinput_0056.ui.component.FieldTanggal
+import com.example.questtugasuserinput_0056.ui.component.FieldDropdown
 import com.example.questtugasuserinput_0056.ui.component.IndikatorHalaman
 
 @Composable
@@ -42,6 +44,7 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
     val namaBelakang = rememberSaveable { mutableStateOf(String()) }
     val email = rememberSaveable { mutableStateOf(String()) }
     val tglLahir = rememberSaveable { mutableStateOf(String()) }
+    val indeksExperience = rememberSaveable { mutableStateOf<Int?>(null) }
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = colorResource(R.color.transparan),
@@ -116,11 +119,24 @@ fun BiodataScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier.fillMaxWidth(),
                     tipeKeyboard = KeyboardType.Email,
                 )
-                FieldTanggal(
-                    nilai = tglLahir.value,
-                    onTanggalBerubah = { tglLahir.value = it },
+                val pilihanExperience = stringArrayResource(R.array.daftar_experience).toList()
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                )
+                    horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spasi_8)),
+                ) {
+                    FieldTanggal(
+                        nilai = tglLahir.value,
+                        onTanggalBerubah = { tglLahir.value = it },
+                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+                    )
+                    FieldDropdown(
+                        nilai = indeksExperience.value?.let(pilihanExperience::getOrNull) ?: String(),
+                        pilihan = pilihanExperience,
+                        onPilihanBerubah = { indeksExperience.value = it },
+                        label = R.string.label_experience,
+                        modifier = Modifier.weight(integerResource(R.integer.berat_sama).toFloat()),
+                    )
+                }
             }
         }
     }

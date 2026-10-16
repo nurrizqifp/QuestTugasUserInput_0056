@@ -6,16 +6,23 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -128,4 +135,59 @@ fun FieldTanggal(
         ),
         modifier = modifier,
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FieldDropdown(
+    nilai: String,
+    pilihan: List<String>,
+    onPilihanBerubah: (Int) -> Unit,
+    @StringRes label: Int,
+    modifier: Modifier = Modifier,
+) {
+    val terbuka = remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = terbuka.value,
+        onExpandedChange = { terbuka.value = !terbuka.value },
+        modifier = modifier,
+    ) {
+        OutlinedTextField(
+            value = nilai,
+            onValueChange = {},
+            readOnly = true,
+            singleLine = true,
+            maxLines = integerResource(R.integer.maks_baris),
+            label = { Text(stringResource(label)) },
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_panah_bawah),
+                    contentDescription = stringResource(R.string.cd_ikon_panah_bawah),
+                )
+            },
+            shape = RoundedCornerShape(dimensionResource(R.dimen.radius_field)),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = colorResource(R.color.ungu_tombol),
+                unfocusedBorderColor = colorResource(R.color.abu_garis_field),
+            ),
+            modifier = Modifier
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable)
+                .fillMaxWidth(),
+        )
+        ExposedDropdownMenu(
+            expanded = terbuka.value,
+            onDismissRequest = { terbuka.value = false },
+        ) {
+            pilihan.forEachIndexed { indeks, teksPilihan ->
+                DropdownMenuItem(
+                    text = { Text(teksPilihan) },
+                    onClick = {
+                        onPilihanBerubah(indeks)
+                        terbuka.value = false
+                    },
+                )
+            }
+        }
+    }
 }
